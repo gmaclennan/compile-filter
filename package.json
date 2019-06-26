@@ -1,13 +1,13 @@
 {
-  "name": "feature-filter-geojson",
+  "name": "static-filter",
   "version": "1.0.0",
   "main": "./index.js",
   "description": "Creates filtering function for GeoJSON features",
   "dependencies": {},
   "devDependencies": {
     "pbf": "^1.3.5",
-    "standard": "^11.0.1",
-    "tape": "^3.2.1",
+    "standard": "^12.0.1",
+    "tape": "^4.10.2",
     "vector-tile": "^1.2.0"
   },
   "scripts": {
@@ -17,12 +17,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/digidem/feature-filter-geojson.git"
+    "url": "git+ssh://git@github.com/gmaclennan/static-filter.git"
   },
   "bugs": {
-    "url": "https://github.com/digidem/feature-filter-geojson/issues"
+    "url": "https://github.com/gmaclennan/static-filter/issues"
   },
-  "homepage": "https://github.com/digidem/feature-filter-geojson#readme",
-  "author": "",
-  "license": "ISC"
+  "homepage": "https://github.com/gmaclennan/static-filter#readme",
+  "author": "Gregor MacLennan",
+  "license": "MIT",
+  "keywords": [
+    "filter",
+    "array",
+    "static"
+  ]
 }
