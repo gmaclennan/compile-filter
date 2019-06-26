@@ -237,6 +237,20 @@ test('in, string', function (t) {
   t.end()
 })
 
+test('in, string nested', function (t) {
+  var f = filter(['in', ['foo', 'bar'], '0'])
+  t.equal(f({ foo: 0 }), false)
+  t.equal(f({ foo: '0' }), false)
+  t.equal(f({ foo: { bar: 0 } }), false)
+  t.equal(f({ foo: { bar: '0' } }), true)
+  t.equal(f({ foo: { bar: true } }), false)
+  t.equal(f({ foo: { bar: false } }), false)
+  t.equal(f({ foo: { bar: null } }), false)
+  t.equal(f({ foo: { bar: undefined } }), false)
+  t.equal(f({}), false)
+  t.end()
+})
+
 test('in, number', function (t) {
   var f = filter(['in', 'foo', 0])
   t.equal(f({ foo: 0 }), true)
@@ -288,6 +302,18 @@ test('!in, string', function (t) {
   t.equal(f({ foo: '0' }), false)
   t.equal(f({ foo: null }), true)
   t.equal(f({ foo: undefined }), true)
+  t.equal(f({}), true)
+  t.end()
+})
+
+test('!in, string nested', function (t) {
+  var f = filter(['!in', ['foo', 'bar'], '0'])
+  t.equal(f({ foo: 0 }), true)
+  t.equal(f({ foo: '0' }), true)
+  t.equal(f({ foo: { bar: 0 } }), true)
+  t.equal(f({ foo: { bar: '0' } }), false)
+  t.equal(f({ foo: { bar: null } }), true)
+  t.equal(f({ foo: { bar: undefined } }), true)
   t.equal(f({}), true)
   t.end()
 })
