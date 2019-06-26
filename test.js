@@ -44,10 +44,28 @@ test('==, null', function (t) {
   t.end()
 })
 
+test('==, string nested', function (t) {
+  var f = filter(['==', ['foo', 'qux'], 'bar'])
+  t.equal(f({ foo: 'bar' }), false)
+  t.equal(f({ foo: 'baz' }), false)
+  t.equal(f({ foo: { qux: 'bar' } }), true)
+  t.equal(f({ foo: { qux: 'baz' } }), false)
+  t.end()
+})
+
 test('!=, string', function (t) {
   var f = filter(['!=', 'foo', 'bar'])
   t.equal(f({ foo: 'bar' }), false)
   t.equal(f({ foo: 'baz' }), true)
+  t.end()
+})
+
+test('!=, string nested', function (t) {
+  var f = filter(['!=', ['foo', 'qux'], 'bar'])
+  t.equal(f({ foo: 'bar' }), true)
+  t.equal(f({ foo: 'baz' }), true)
+  t.equal(f({ foo: { qux: 'bar' } }), false)
+  t.equal(f({ foo: { qux: 'baz' } }), true)
   t.end()
 })
 
