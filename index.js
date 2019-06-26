@@ -6,7 +6,7 @@ module.exports = createFilter
  * Given a filter expressed as nested arrays, return a new function that
  * evaluates whether a given object passes its test.
  *
- * @param {Array} filter mapbox gl filter
+ * @param {Array} filter filter expression
  * @returns {Function} filter-evaluating function
  */
 function createFilter (filter) {
@@ -36,8 +36,14 @@ function compile (filter) {
   return '(' + str + ')'
 }
 
-function compilePropertyReference (property) {
-  return 'p[' + JSON.stringify(property) + ']'
+const js = JSON.stringify
+
+function compilePropertyReference (p) {
+  return typeof p === 'string'
+    ? `p[${js(p)}]`
+    : p
+      .map(q => js(q))
+      .map((q, i, a) => `p[${a.slice(0, i + 1).join('][')}]`).join(' && ')
 }
 
 function compileComparisonOp (property, value, op, checkType) {
