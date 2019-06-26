@@ -1,59 +1,27 @@
 'use strict'
 
-var VectorTile = require('vector-tile').VectorTile
-var Pbf = require('pbf')
-var fs = require('fs')
 var createFilter = require('../')
-var filters = require('./filters.json')
-var path = require('path')
+var rawFilters = require('./filters.json')
+var data = require('./data.json')
 
-var tile = new VectorTile(new Pbf(fs.readFileSync(path.join(__dirname, './785.vector.pbf'))))
-
-var layers = []
-for (var name in tile.layers) {
-  var layer = tile.layers[name]
-  if (!layer.length) continue
-
-  var features = []
-  for (var j = 0; j < layer.length; j++) {
-    features.push(layer.feature(j))
-  }
-
-  var layerFilters = []
-  for (j = 0; j < filters.length; j++) {
-    if (filters[j].layer === name) layerFilters.push(filters[j].filter)
-  }
-
-  layers.push({
-    name: name,
-    features: features,
-    rawFilters: layerFilters
-  })
+for (let i = 0; i < 8; i++) {
+  data = data.concat(data)
 }
 
-console.time('create filters')
-for (var m = 0; m < 100; m++) {
-  for (var i = 0; i < layers.length; i++) {
-    var layer = layers[i]
-    layer.filters = []
-    for (j = 0; j < layer.rawFilters.length; j++) {
-      layer.filters.push(createFilter(layer.rawFilters[j]))
-    }
-  }
-}
-console.timeEnd('create filters')
+const filters = []
 
-console.time('apply filters')
-for (var m = 0; m < 100; m++) {
-  for (var i = 0; i < layers.length; i++) {
-    var layer = layers[i]
-    for (j = 0; j < layer.features.length; j++) {
-      var feature = layer.features[j]
-      for (var k = 0; k < layer.filters.length; k++) {
-        var filter = layer.filters[k]
-        filter(feature)
-      }
-    }
+console.time('create ' + rawFilters.length + ' filters 100 times')
+for (let j = 0; j < rawFilters.length; j++) {
+  filters.push(createFilter(rawFilters[j]))
+}
+console.timeEnd('create ' + rawFilters.length + ' filters 100 times')
+
+console.time('apply ' + filters.length + ' filters to ' + data.length + ' items')
+for (let j = 0; j < data.length; j++) {
+  var feature = data[j]
+  for (var k = 0; k < filters.length; k++) {
+    var filter = filters[k]
+    filter(feature)
   }
 }
-console.timeEnd('apply filters')
+console.timeEnd('apply ' + filters.length + ' filters to ' + data.length + ' items')
