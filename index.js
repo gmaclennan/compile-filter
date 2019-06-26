@@ -3,16 +3,15 @@
 module.exports = createFilter
 
 /**
- * Given a filter expressed as nested arrays, return a new function
- * that evaluates whether a given feature (with a .properties or .tags property)
- * passes its test.
+ * Given a filter expressed as nested arrays, return a new function that
+ * evaluates whether a given object passes its test.
  *
  * @param {Array} filter mapbox gl filter
  * @returns {Function} filter-evaluating function
  */
 function createFilter (filter) {
   // eslint-disable-next-line no-new-func
-  return new Function('f', 'var p = (f && f.properties || {}); var g = (f && f.geometry || {}); return ' + compile(filter))
+  return new Function('f', 'var p = (f || {}); return ' + compile(filter))
 }
 
 function compile (filter) {
@@ -38,9 +37,7 @@ function compile (filter) {
 }
 
 function compilePropertyReference (property) {
-  return property === '$type' ? 'g.type'
-    : property === '$id' ? 'f.id'
-      : 'p[' + JSON.stringify(property) + ']'
+  return 'p[' + JSON.stringify(property) + ']'
 }
 
 function compileComparisonOp (property, value, op, checkType) {
